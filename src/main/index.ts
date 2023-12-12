@@ -1,8 +1,10 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, screen, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { keyTap, moveMouse } from 'robotjs'
+import { moveMouse } from 'robotjs'
+import { MoveMouseParams } from '../types'
+import { askForAccessibilityAccess } from 'node-mac-permissions'
 
 function createWindow(): void {
   // Create the browser window.
@@ -58,9 +60,17 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-
+  // ================== ask permissions =================
   app.setSecureKeyboardEntryEnabled(true)
   app.setAccessibilitySupportEnabled(true)
+  askForAccessibilityAccess()
+
+  ipcMain.on('move-mouse-from-renderer', (_, { left, top }: MoveMouseParams) => {
+    const mousePosition = screen.getCursorScreenPoint()
+    console.log(mousePosition.x, mousePosition.x + left, mousePosition.y, mousePosition.y + top)
+
+    moveMouse(mousePosition.x + left, mousePosition.y + top)
+  })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -71,11 +81,5 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-setInterval(() => 
-{
-  console.log('move');
-  moveMouse(0, 1)
-  keyTap('a')
-}, 5000)
 // In this fil e you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

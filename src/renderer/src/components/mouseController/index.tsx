@@ -1,27 +1,28 @@
 import { Button } from 'antd'
-// import { moveMouse } from 'robotjs'
-const { moveMouse } = require('robotjs');
+// import { ipcRenderer } from 'electron'
+import { PreloadAPITypes } from 'src/types'
 
+const moveMouse = (window.api as PreloadAPITypes).moveMouseSmooth
 
 export default function MouseController(): JSX.Element {
   return (
-    <>
+    <div style={{ width: '100vw', height: 30, display: 'flex', justifyContent: 'space-around' }}>
       <Button
         type="primary"
         onClick={() => {
-          moveMouse(0, 500)
+          moveMouse(100, 100)
         }}
       >
-        lft
+        left
       </Button>
       <Button
         type="primary"
         onClick={() => {
-          moveMouse(500, 500)
+          moveMouse(100, 100)
         }}
       >
-        right
+        top
       </Button>
-    </>
+    </div>
   )
 }
