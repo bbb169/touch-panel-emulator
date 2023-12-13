@@ -24,6 +24,7 @@
     "@electron-toolkit/utils": "^2.0.0",
     "antd": "^5.12.1",
     "electron-updater": "^6.1.1",
+    "ffi-napi": "^4.0.3",
     "loadsh": "^0.0.4",
     "lodash": "^4.17.21",
     "node-mac-permissions": "^2.3.0",
