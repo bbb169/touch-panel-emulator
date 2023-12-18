@@ -3,8 +3,10 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { moveMouse } from 'robotjs'
-import { MoveMouseParams } from '../types'
+import { AppleScript, MoveMouseParams } from '../types'
 import { askForAccessibilityAccess } from 'node-mac-permissions'
+import applescript from 'applescript'
+const appleScript: AppleScript = applescript
 
 function createWindow(): void {
   // Create the browser window.
@@ -67,6 +69,9 @@ app.whenReady().then(() => {
 
   ipcMain.on('move-mouse-from-renderer', (_, { left, top }: MoveMouseParams) => {
     const mousePosition = screen.getCursorScreenPoint()
+    appleScript.execString('display dialog "Welcome to AppleScript."', (err, rtn) => {
+      console.log(err, rtn)
+    })
     console.log(mousePosition.x, mousePosition.x + left, mousePosition.y, mousePosition.y + top)
 
     moveMouse(mousePosition.x + left, mousePosition.y + top)
