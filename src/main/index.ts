@@ -69,9 +69,18 @@ app.whenReady().then(() => {
 
   ipcMain.on('move-mouse-from-renderer', (_, { left, top }: MoveMouseParams) => {
     const mousePosition = screen.getCursorScreenPoint()
-    appleScript.execString('display dialog "Welcome to AppleScript."', (err, rtn) => {
-      console.log(err, rtn)
-    })
+    appleScript.execString(`tell application "System Events"
+        key down control
+        delay 0.2
+        key down tab
+        delay 0.2
+        key up control
+        key up tab
+    end tell
+    `, (err, rtn) => {
+      appleScript.execString(`display dialog "err${err}|${rtn}"`)
+          console.log(err, rtn)
+        })
     console.log(mousePosition.x, mousePosition.x + left, mousePosition.y, mousePosition.y + top)
 
     moveMouse(mousePosition.x + left, mousePosition.y + top)
