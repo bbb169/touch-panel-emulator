@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import { moveMouse } from 'robotjs'
 import { AppleScript, MoveMouseParams } from '../types'
 import { askForAccessibilityAccess } from 'node-mac-permissions'
+import { threeFingerSwitchWindow } from './applescripts/index';
 import applescript from 'applescript'
 const appleScript: AppleScript = applescript
 
@@ -69,15 +70,7 @@ app.whenReady().then(() => {
 
   ipcMain.on('move-mouse-from-renderer', (_, { left, top }: MoveMouseParams) => {
     const mousePosition = screen.getCursorScreenPoint()
-    appleScript.execString(`tell application "System Events"
-        key down control
-        delay 0.2
-        key down tab
-        delay 0.2
-        key up control
-        key up tab
-    end tell
-    `, (err, rtn) => {
+    appleScript.execString(threeFingerSwitchWindow(left > 0 ? 'right' : 'top'), (err, rtn) => {
       appleScript.execString(`display dialog "err${err}|${rtn}"`)
           console.log(err, rtn)
         })

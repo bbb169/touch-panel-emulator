@@ -18,7 +18,7 @@ export default function MouseController(): JSX.Element {
       <Button
         type="primary"
         onClick={() => {
-          moveMouse(100, 100)
+          moveMouse(-100, -100)
         }}
       >
         top
