@@ -1,12 +1,16 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { MoveMouseParams, PreloadAPITypes } from '../types'
+import { MoveMouseParams, PreloadAPITypes, ScrollMouseParams } from '../types'
 
 // Custom APIs for renderer
 const api: PreloadAPITypes = {
   moveMouseSmooth: (left: number, top: number): void => {
     const data: MoveMouseParams = { left, top }
     ipcRenderer.send('move-mouse-from-renderer', data)
+  },
+  scrollMouse: ({ right, top }: ScrollMouseParams): void => {
+    const data: ScrollMouseParams = { right, top }
+    ipcRenderer.send('scroll-mouse-from-renderer', data)
   }
 }
 
