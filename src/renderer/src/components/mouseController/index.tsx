@@ -6,6 +6,7 @@ import { MouseClickParams, PreloadAPITypes } from 'src/types'
 const moveMouse = (window.api as PreloadAPITypes).moveMouseSmooth
 const scrollMouse = (window.api as PreloadAPITypes).scrollMouse
 const mouseClick = (window.api as PreloadAPITypes).mouseClick
+const keyTap = (window.api as PreloadAPITypes).keyTap
 
 export default function MouseController(): JSX.Element {
   const [clickMsg, setClickMsg] = useState('null')
@@ -46,6 +47,15 @@ export default function MouseController(): JSX.Element {
           }}
         >
           click:{clickMsg}
+        </Button>
+        <Button
+          type="primary"
+          onClick={() => {
+            keyTap({ key: 'control' })
+            scrollMouse({ top: 50 })
+          }}
+        >
+          Zoom in
         </Button>
       </div>
 

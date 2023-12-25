@@ -2,8 +2,8 @@ import { app, shell, BrowserWindow, screen, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { mouseClick, moveMouse, scrollMouse } from 'robotjs'
-import { AppleScript, MouseClickParams, MoveMouseParams, ScrollMouseParams } from '../types'
+import { keyTap, mouseClick, moveMouse, scrollMouse } from 'robotjs'
+import { AppleScript, KeyTapParams, MouseClickParams, MoveMouseParams, ScrollMouseParams } from '../types'
 import { askForAccessibilityAccess } from 'node-mac-permissions'
 import { threeFingerSwitchWindow } from './applescripts/index'
 import applescript from 'applescript'
@@ -85,9 +85,11 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('mouse-click-from-renderer', (_, { button, double }: MouseClickParams) => {
-    console.log('i got hhhhh');
-    
     mouseClick(button, double)
+  })
+
+  ipcMain.on('mouse-click-from-renderer', (_, { key, modified }: KeyTapParams) => {
+    keyTap(key, modified)
   })
 })
 

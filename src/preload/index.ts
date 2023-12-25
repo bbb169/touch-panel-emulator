@@ -13,10 +13,11 @@ const api: PreloadAPITypes = {
     ipcRenderer.send('scroll-mouse-from-renderer', data)
   },
   mouseClick({ button, double }) {
-    console.log('i got hhh');
-    
     ipcRenderer.send('mouse-click-from-renderer', { button, double })
-  }
+  },
+  keyTap({ key, modified }) {
+    ipcRenderer.send('mouse-click-from-renderer', { key, modified })
+  },
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

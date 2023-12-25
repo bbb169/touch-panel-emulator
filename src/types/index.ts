@@ -15,10 +15,16 @@ export interface MouseClickParams {
   double?: boolean
 }
 
+export interface KeyTapParams {
+  key: string
+  modified?: string[]
+}
+
 export interface PreloadAPITypes {
   moveMouseSmooth: (left: number, top: number) => void
   scrollMouse: ({ right, top }: ScrollMouseParams) => void
   mouseClick: ({ button, double }: MouseClickParams) => void
+  keyTap: ({ key, modified }: KeyTapParams) => void
 }
 
 export interface AppleScript {
