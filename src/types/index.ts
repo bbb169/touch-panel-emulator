@@ -8,9 +8,17 @@ export interface ScrollMouseParams {
   top?: number
 }
 
+export interface MouseClickParams {
+  /** Accepts left, right, or middle. */
+  button?: 'left' | 'right' | 'middle'
+  /** Set to true to perform a double click.	 */
+  double?: boolean
+}
+
 export interface PreloadAPITypes {
   moveMouseSmooth: (left: number, top: number) => void
   scrollMouse: ({ right, top }: ScrollMouseParams) => void
+  mouseClick: ({ button, double }: MouseClickParams) => void
 }
 
 export interface AppleScript {

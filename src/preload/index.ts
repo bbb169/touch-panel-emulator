@@ -11,6 +11,11 @@ const api: PreloadAPITypes = {
   scrollMouse: ({ right, top }: ScrollMouseParams): void => {
     const data: ScrollMouseParams = { right, top }
     ipcRenderer.send('scroll-mouse-from-renderer', data)
+  },
+  mouseClick({ button, double }) {
+    console.log('i got hhh');
+    
+    ipcRenderer.send('mouse-click-from-renderer', { button, double })
   }
 }
 

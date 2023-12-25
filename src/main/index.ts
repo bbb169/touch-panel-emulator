@@ -2,8 +2,8 @@ import { app, shell, BrowserWindow, screen, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { moveMouse, scrollMouse } from 'robotjs'
-import { AppleScript, MoveMouseParams, ScrollMouseParams } from '../types'
+import { mouseClick, moveMouse, scrollMouse } from 'robotjs'
+import { AppleScript, MouseClickParams, MoveMouseParams, ScrollMouseParams } from '../types'
 import { askForAccessibilityAccess } from 'node-mac-permissions'
 import { threeFingerSwitchWindow } from './applescripts/index'
 import applescript from 'applescript'
@@ -71,8 +71,9 @@ app.whenReady().then(() => {
   ipcMain.on('move-mouse-from-renderer', (_, { left, top }: MoveMouseParams) => {
     const mousePosition = screen.getCursorScreenPoint()
     appleScript.execString(threeFingerSwitchWindow(left > 0 ? 'right' : 'top'), (err, rtn) => {
-      appleScript.execString(`display dialog "err${err}|${rtn}"`)
-      console.log(err, rtn)
+      if (err) {
+        appleScript.execString(`display dialog "err: ${err}"`)
+      }
     })
     console.log(mousePosition.x, mousePosition.x + left, mousePosition.y, mousePosition.y + top)
 
@@ -81,6 +82,12 @@ app.whenReady().then(() => {
 
   ipcMain.on('scroll-mouse-from-renderer', (_, { right, top }: ScrollMouseParams) => {
     scrollMouse(right || 0, top || 0)
+  })
+
+  ipcMain.on('mouse-click-from-renderer', (_, { button, double }: MouseClickParams) => {
+    console.log('i got hhhhh');
+    
+    mouseClick(button, double)
   })
 })
 
