@@ -25,6 +25,7 @@ export interface PreloadAPITypes {
   scrollMouse: ({ right, top }: ScrollMouseParams) => void
   mouseClick: ({ button, double }: MouseClickParams) => void
   keyTap: ({ key, modified }: KeyTapParams) => void
+  zoomInOrOut: (isIn?: boolean) => void
 }
 
 export interface AppleScript {

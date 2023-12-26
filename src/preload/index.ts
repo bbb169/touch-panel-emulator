@@ -18,6 +18,9 @@ const api: PreloadAPITypes = {
   keyTap({ key, modified }) {
     ipcRenderer.send('mouse-click-from-renderer', { key, modified })
   },
+  zoomInOrOut(isIn) {
+    ipcRenderer.send('zoom-change-from-renderer', isIn)
+  }
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

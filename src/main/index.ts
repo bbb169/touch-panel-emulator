@@ -3,9 +3,15 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { keyTap, mouseClick, moveMouse, scrollMouse } from 'robotjs'
-import { AppleScript, KeyTapParams, MouseClickParams, MoveMouseParams, ScrollMouseParams } from '../types'
+import {
+  AppleScript,
+  KeyTapParams,
+  MouseClickParams,
+  MoveMouseParams,
+  ScrollMouseParams
+} from '../types'
 import { askForAccessibilityAccess } from 'node-mac-permissions'
-import { threeFingerSwitchWindow } from './applescripts/index'
+import { threeFingerSwitchWindow, zoomInOrOut } from './applescripts/index'
 import applescript from 'applescript'
 const appleScript: AppleScript = applescript
 
@@ -90,6 +96,14 @@ app.whenReady().then(() => {
 
   ipcMain.on('mouse-click-from-renderer', (_, { key, modified }: KeyTapParams) => {
     keyTap(key, modified)
+  })
+
+  ipcMain.on('zoom-change-from-renderer', (_, isIn: boolean | undefined) => {
+    appleScript.execString(zoomInOrOut(isIn), (err) => {
+      if (err) {
+        appleScript.execString(`display dialog "err: ${err}"`)
+      }
+    })
   })
 })
 

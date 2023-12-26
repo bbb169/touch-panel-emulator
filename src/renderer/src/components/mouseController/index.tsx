@@ -6,7 +6,7 @@ import { MouseClickParams, PreloadAPITypes } from 'src/types'
 const moveMouse = (window.api as PreloadAPITypes).moveMouseSmooth
 const scrollMouse = (window.api as PreloadAPITypes).scrollMouse
 const mouseClick = (window.api as PreloadAPITypes).mouseClick
-const keyTap = (window.api as PreloadAPITypes).keyTap
+const zoomInOrOut = (window.api as PreloadAPITypes).zoomInOrOut
 
 export default function MouseController(): JSX.Element {
   const [clickMsg, setClickMsg] = useState('null')
@@ -51,8 +51,10 @@ export default function MouseController(): JSX.Element {
         <Button
           type="primary"
           onClick={() => {
-            keyTap({ key: 'control' })
-            scrollMouse({ top: 50 })
+            setTimeout(() => {
+              zoomInOrOut()
+              // keyTap({ key: '=', modified: ['control'] })
+            }, 1000);
           }}
         >
           Zoom in
