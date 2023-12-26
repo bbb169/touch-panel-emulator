@@ -13,6 +13,7 @@ import {
 import { askForAccessibilityAccess } from 'node-mac-permissions'
 import { threeFingerSwitchWindow, zoomInOrOut } from './applescripts/index'
 import applescript from 'applescript'
+import { setUpWebsocket } from './websocket'
 const appleScript: AppleScript = applescript
 
 function createWindow(): void {
@@ -74,6 +75,10 @@ app.whenReady().then(() => {
   app.setAccessibilitySupportEnabled(true)
   askForAccessibilityAccess()
 
+  // ======= set up webscocket to listen messages from mobile =====
+  setUpWebsocket()
+
+  // ================= communication between main and renderer =============
   ipcMain.on('move-mouse-from-renderer', (_, { left, top }: MoveMouseParams) => {
     const mousePosition = screen.getCursorScreenPoint()
     appleScript.execString(threeFingerSwitchWindow(left > 0 ? 'right' : 'top'), (err, rtn) => {
