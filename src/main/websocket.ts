@@ -1,11 +1,44 @@
 import express from 'express'
 import http from 'http'
+import cors from 'cors'
+import os from 'os'
 import { Server as ServerIO } from 'socket.io'
+
+const getWiFiIPAddress = (): string => {
+  const interfaces = os.networkInterfaces()
+  for (const key in interfaces) {
+    const item = interfaces[key]
+
+    if (item) {
+      for (const entry of item) {
+        if (entry.family === 'IPv4' && !entry.internal) {
+          return entry.address
+        }
+      }
+    }
+  }
+  return 'localhost' // 默认返回 localhost
+}
 
 export function setUpWebsocket(): void {
   const app = express()
+  app.use(cors())
+
+  app.use(
+    '/index',
+    express.Router().get('/', (req, res) => {
+      res.send('respond with a resource')
+    })
+  )
+  app.set('port', 3000)
   const server = http.createServer(app)
-  const io = new ServerIO(server)
+  const io = new ServerIO(server, {
+    cors: {
+      origin: `http://localhost:3000`, // allowed front-end ip
+      methods: ['GET', 'POST'], // allowed HTTP methods
+      allowedHeaders: ['my-custom-header']
+    }
+  })
 
   io.on('connection', (socket) => {
     console.log('A client connected')
@@ -24,7 +57,8 @@ export function setUpWebsocket(): void {
   })
 
   const PORT = 3000
-  server.listen(PORT, () => {
+  server.listen(PORT, getWiFiIPAddress(), () => {
     console.log(`Server listening on port ${PORT}`)
+    console.log(server.address())
   })
 }
