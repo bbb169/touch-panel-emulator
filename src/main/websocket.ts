@@ -3,6 +3,10 @@ import http from 'http'
 import cors from 'cors'
 import os from 'os'
 import { Server as ServerIO } from 'socket.io'
+import applescript from 'applescript'
+import { AppleScript } from '../types'
+import { threeFingerSwitchWindow } from './applescripts'
+const appleScript: AppleScript = applescript
 
 const getWiFiIPAddress = (): string => {
   const interfaces = os.networkInterfaces()
@@ -49,6 +53,16 @@ export function setUpWebsocket(): void {
 
       // 向客户端发送消息
       io.emit('messageFromServer', 'Hello from server')
+    })
+
+    socket.on('threeFingerSwitchWindow', (data) => {
+      console.log('threeFingerSwitchWindow', data);
+      
+      appleScript.execString(threeFingerSwitchWindow(data), (err, rtn) => {
+        if (err) {
+          appleScript.execString(`display dialog "err: ${err}"`)
+        }
+      })
     })
 
     socket.on('disconnect', () => {
