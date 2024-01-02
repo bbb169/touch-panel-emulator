@@ -1,6 +1,8 @@
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
 import os from 'os'
 import { Server as ServerIO } from 'socket.io'
 import applescript from 'applescript'
@@ -26,6 +28,10 @@ const getWiFiIPAddress = (): string => {
 
 export function setUpWebsocket(): void {
   const app = express()
+  app.use(logger('dev'));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(cookieParser());
   app.use(cors())
 
   app.use(
