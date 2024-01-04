@@ -6,8 +6,10 @@ import logger from 'morgan';
 import os from 'os'
 import { Server as ServerIO } from 'socket.io'
 import applescript from 'applescript'
-import { AppleScript } from '../types'
+import { AppleScript, MoveMouseParams } from '../types'
 import { threeFingerSwitchWindow } from './applescripts'
+import { screen } from 'electron';
+import { moveMouse } from 'robotjs';
 const appleScript: AppleScript = applescript
 
 const getWiFiIPAddress = (): string => {
@@ -69,6 +71,11 @@ export function setUpWebsocket(): void {
           appleScript.execString(`display dialog "err: ${err}"`)
         }
       })
+    })
+
+    socket.on('moveMouse', ({ left, top }: MoveMouseParams) => {
+      const mousePosition = screen.getCursorScreenPoint()
+      moveMouse(mousePosition.x + left, mousePosition.y + top)
     })
 
     socket.on('disconnect', () => {
