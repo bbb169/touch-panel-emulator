@@ -1,6 +1,7 @@
 export interface MoveMouseParams {
   left: number
   top: number
+  isDraging: boolean
 }
 
 export interface ScrollMouseParams {

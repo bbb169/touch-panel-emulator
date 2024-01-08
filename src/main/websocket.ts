@@ -1,15 +1,15 @@
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
-import cookieParser from 'cookie-parser';
-import logger from 'morgan';
+import cookieParser from 'cookie-parser'
+import logger from 'morgan'
 import os from 'os'
 import { Server as ServerIO } from 'socket.io'
 import applescript from 'applescript'
 import { AppleScript, MoveMouseParams } from '../types'
 import { threeFingerSwitchWindow } from './applescripts'
-import { screen } from 'electron';
-import { moveMouse } from 'robotjs';
+import { screen } from 'electron'
+import { dragMouse, mouseToggle, moveMouse } from 'robotjs'
 const appleScript: AppleScript = applescript
 
 const getWiFiIPAddress = (): string => {
@@ -30,10 +30,10 @@ const getWiFiIPAddress = (): string => {
 
 export function setUpWebsocket(): void {
   const app = express()
-  app.use(logger('dev'));
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
-  app.use(cookieParser());
+  app.use(logger('dev'))
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: false }))
+  app.use(cookieParser())
   app.use(cors())
 
   app.use(
@@ -64,8 +64,8 @@ export function setUpWebsocket(): void {
     })
 
     socket.on('threeFingerSwitchWindow', (data) => {
-      console.log('threeFingerSwitchWindow', data);
-      
+      console.log('threeFingerSwitchWindow', data)
+
       appleScript.execString(threeFingerSwitchWindow(data), (err, rtn) => {
         if (err) {
           appleScript.execString(`display dialog "err: ${err}"`)
@@ -73,10 +73,32 @@ export function setUpWebsocket(): void {
       })
     })
 
-    socket.on('moveMouse', ({ left, top }: MoveMouseParams) => {
+    socket.on('moveMouse', ({ left, top, isDraging }: MoveMouseParams) => {
       const mousePosition = screen.getCursorScreenPoint()
-      moveMouse(mousePosition.x + left, mousePosition.y + top)
+      console.log(isDraging, mousePosition.x + left, mousePosition.y + top)
+      isDraging
+        ? dragMouse(mousePosition.x + left, mousePosition.y + top)
+        : moveMouse(mousePosition.x + left, mousePosition.y + top)
     })
+
+    // socket.on('dragMouse', ({ left, top }: MoveMouseParams) => {
+    //   const mousePosition = screen.getCursorScreenPoint()
+    //   console.log('dragh', mousePosition.x, mousePosition.y, left, top);
+
+    //   dragMouse(mousePosition.x + left, mousePosition.y + top)
+    // })
+
+    socket.on(
+      'mouseToggle',
+      ({ down, button }: { down?: 'down' | 'up'; button?: 'left' | 'right' | 'middle' }) => {
+        mouseToggle(down || 'down', button || 'left')
+        setTimeout(() => {
+          const mousePosition = screen.getCursorScreenPoint()
+          dragMouse(mousePosition.x , mousePosition.y)
+          console.log(down, button, mousePosition.x , mousePosition.y)
+        }, 0);
+      }
+    )
 
     socket.on('disconnect', () => {
       console.log('Client disconnected')
