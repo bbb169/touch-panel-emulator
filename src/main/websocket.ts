@@ -9,7 +9,7 @@ import applescript from 'applescript'
 import { AppleScript, MoveMouseParams } from '../types'
 import { threeFingerSwitchWindow } from './applescripts'
 import { screen } from 'electron'
-import { dragMouse, mouseToggle, moveMouse } from 'robotjs'
+import { dragMouse, getMousePos, mouseToggle, moveMouse } from 'robotjs'
 const appleScript: AppleScript = applescript
 
 const getWiFiIPAddress = (): string => {
@@ -74,29 +74,17 @@ export function setUpWebsocket(): void {
     })
 
     socket.on('moveMouse', ({ left, top, isDraging }: MoveMouseParams) => {
-      const mousePosition = screen.getCursorScreenPoint()
+      const mousePosition = getMousePos()
       console.log(isDraging, mousePosition.x + left, mousePosition.y + top)
       isDraging
         ? dragMouse(mousePosition.x + left, mousePosition.y + top)
         : moveMouse(mousePosition.x + left, mousePosition.y + top)
     })
 
-    // socket.on('dragMouse', ({ left, top }: MoveMouseParams) => {
-    //   const mousePosition = screen.getCursorScreenPoint()
-    //   console.log('dragh', mousePosition.x, mousePosition.y, left, top);
-
-    //   dragMouse(mousePosition.x + left, mousePosition.y + top)
-    // })
-
     socket.on(
       'mouseToggle',
       ({ down, button }: { down?: 'down' | 'up'; button?: 'left' | 'right' | 'middle' }) => {
         mouseToggle(down || 'down', button || 'left')
-        setTimeout(() => {
-          const mousePosition = screen.getCursorScreenPoint()
-          dragMouse(mousePosition.x , mousePosition.y)
-          console.log(down, button, mousePosition.x , mousePosition.y)
-        }, 0);
       }
     )
 
