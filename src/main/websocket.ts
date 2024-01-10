@@ -9,7 +9,7 @@ import applescript from 'applescript'
 import { AppleScript, MoveMouseParams } from '../types'
 import { threeFingerSwitchWindow } from './applescripts'
 import { screen } from 'electron'
-import { dragMouse, getMousePos, mouseToggle, moveMouse } from 'robotjs'
+import { dragMouse, getMousePos, mouseClick, mouseToggle, moveMouse } from 'robotjs'
 const appleScript: AppleScript = applescript
 
 const getWiFiIPAddress = (): string => {
@@ -85,6 +85,21 @@ export function setUpWebsocket(): void {
       'mouseToggle',
       ({ down, button }: { down?: 'down' | 'up'; button?: 'left' | 'right' | 'middle' }) => {
         mouseToggle(down || 'down', button || 'left')
+      }
+    )
+
+    socket.on(
+      'mouseClick',
+      ({
+        button = 'left',
+        double = false
+      }: {
+        button?: 'left' | 'right' | 'middle'
+        double?: boolean
+      }) => {
+        console.log('clickckckc', button, double)
+
+        mouseClick(button, double)
       }
     )
 
