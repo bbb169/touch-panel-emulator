@@ -75,7 +75,6 @@ export function setUpWebsocket(): void {
 
     socket.on('moveMouse', ({ left, top, isDraging }: MoveMouseParams) => {
       const mousePosition = getMousePos()
-      console.log(isDraging, mousePosition.x + left, mousePosition.y + top)
       isDraging
         ? dragMouse(mousePosition.x + left, mousePosition.y + top)
         : moveMouse(mousePosition.x + left, mousePosition.y + top)
@@ -97,8 +96,6 @@ export function setUpWebsocket(): void {
         button?: 'left' | 'right' | 'middle'
         double?: boolean
       }) => {
-        console.log('clickckckc', button, double)
-
         mouseClick(button, double)
       }
     )
