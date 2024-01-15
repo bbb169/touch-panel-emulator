@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, screen, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, screen, ipcMain, ipcRenderer } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -13,7 +13,7 @@ import {
 import { askForAccessibilityAccess } from 'node-mac-permissions'
 import { threeFingerSwitchWindow, zoomInOrOut } from './applescripts/index'
 import applescript from 'applescript'
-import { setUpWebsocket } from './websocket'
+import { getWiFiIPAddress, setUpWebsocket } from './websocket'
 const appleScript: AppleScript = applescript
 
 function createWindow(): void {
@@ -110,6 +110,9 @@ app.whenReady().then(() => {
       }
     })
   })
+
+  // =============================== main =====================================
+  ipcMain.emit('getWiFiIPAddress', getWiFiIPAddress())
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
