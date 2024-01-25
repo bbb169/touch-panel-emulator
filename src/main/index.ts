@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, screen, ipcMain, ipcRenderer } from 'electro
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { keyTap, mouseClick, moveMouse, scrollMouse } from 'robotjs'
+import { keyTap, mouseClick, moveMouse, scrollMouse } from '@hurdlegroup/robotjs'
 import {
   AppleScript,
   KeyTapParams,
@@ -10,7 +10,6 @@ import {
   MoveMouseParams,
   ScrollMouseParams
 } from '../types'
-import { askForAccessibilityAccess } from 'node-mac-permissions'
 import { threeFingerSwitchWindow, zoomInOrOut } from './applescripts/index'
 import applescript from 'applescript'
 import { getWiFiIPAddress, setUpWebsocket } from './websocket'
@@ -73,7 +72,6 @@ app.whenReady().then(() => {
   // ================== ask permissions =================
   app.setSecureKeyboardEntryEnabled(true)
   app.setAccessibilitySupportEnabled(true)
-  askForAccessibilityAccess()
 
   // ======= set up webscocket to listen messages from mobile =====
   setUpWebsocket()
@@ -112,7 +110,9 @@ app.whenReady().then(() => {
   })
 
   // =============================== main =====================================
-  ipcMain.emit('getWiFiIPAddress', getWiFiIPAddress())
+  ipcMain.handle('getWiFiIPAddress', () => {
+    return getWiFiIPAddress()
+  })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

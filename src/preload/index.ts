@@ -2,13 +2,8 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { MoveMouseParams, PreloadAPITypes, ScrollMouseParams } from '../types'
 
-let ipAddress = ''
+console.log('getWiFiIPAddress',ipcRenderer.invoke('getWiFiIPAddress'));
 
-ipcRenderer.on('getWiFiIPAddress', (_, ip: string) => {
-  console.log('ip', ip);
-  
-  ipAddress = ip
-})
 
 // Custom APIs for renderer
 const api: PreloadAPITypes = {
@@ -29,8 +24,8 @@ const api: PreloadAPITypes = {
   zoomInOrOut(isIn) {
     ipcRenderer.send('zoom-change-from-renderer', isIn)
   },
-  getWiFiIPAddress() {
-    return ipAddress
+  async getWiFiIPAddress() {
+    return await ipcRenderer.invoke('getWiFiIPAddress')
   }
 }
 

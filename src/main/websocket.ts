@@ -8,7 +8,14 @@ import { Server as ServerIO } from 'socket.io'
 import applescript from 'applescript'
 import { AppleScript, MoveMouseParams } from '../types'
 import { threeFingerSwitchWindow } from './applescripts'
-import { dragMouse, getMousePos, mouseClick, mouseToggle, moveMouse, scrollMouse } from 'robotjs'
+import {
+  dragMouse,
+  getMousePos,
+  mouseClick,
+  mouseToggle,
+  moveMouse,
+  scrollMouse
+} from '@hurdlegroup/robotjs'
 const appleScript: AppleScript = applescript
 
 export const getWiFiIPAddress = (): string => {
@@ -50,8 +57,7 @@ export function setUpWebsocket(): void {
       allowedHeaders: ['my-custom-header']
     }
   })
-  console.log(getWiFiIPAddress());
-  
+
   io.on('connection', (socket) => {
     console.log('A client connected', getWiFiIPAddress())
 

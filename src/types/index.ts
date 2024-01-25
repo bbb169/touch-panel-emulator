@@ -27,7 +27,7 @@ export interface PreloadAPITypes {
   mouseClick: ({ button, double }: MouseClickParams) => void
   keyTap: ({ key, modified }: KeyTapParams) => void
   zoomInOrOut: (isIn?: boolean) => void
-  getWiFiIPAddress(): string
+  getWiFiIPAddress(): Promise<string>
 }
 
 export interface AppleScript {
