@@ -50,13 +50,7 @@ export function setUpWebsocket(): void {
   )
   app.set('port', 3000)
   const server = http.createServer(app)
-  const io = new ServerIO(server, {
-    cors: {
-      origin: `http://localhost:3000`, // allowed front-end ip
-      methods: ['GET', 'POST'], // allowed HTTP methods
-      allowedHeaders: ['my-custom-header']
-    }
-  })
+  const io = new ServerIO(server)
 
   io.on('connection', (socket) => {
     console.log('A client connected', getWiFiIPAddress())
@@ -117,7 +111,7 @@ export function setUpWebsocket(): void {
 
   const PORT = 3000
   server.listen(PORT, getWiFiIPAddress(), () => {
-    console.log(`Server listening on port ${PORT}`)
+    console.log(`Server listening on port ${PORT}`, getWiFiIPAddress())
     console.log(server.address())
   })
 }
