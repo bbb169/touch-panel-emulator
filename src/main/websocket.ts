@@ -110,8 +110,11 @@ export function setUpWebsocket(): void {
   })
 
   const PORT = 3000
-  server.listen(PORT, getWiFiIPAddress(), () => {
+  server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`, getWiFiIPAddress())
     console.log(server.address())
   })
+  // server.listen(PORT, '172.25.141.240', () => {
+  //   console.log(`Server listening on port 172.25.141.240`, '172.25.141.240')
+  // })
 }
