@@ -42,13 +42,14 @@ export function setUpWebsocket(): void {
   app.use(cookieParser())
   app.use(cors())
 
-  app.use(
-    '/index',
-    express.Router().get('/', (req, res) => {
-      res.send('respond with a resource')
-    })
-  )
-  app.set('port', 3000)
+  // app.use(
+  //   '/index',
+  //   express.Router().get('/', (req, res) => {
+  //     res.send('respond with a resource')
+  //   })
+  // )
+  const PORT = 3000
+  app.set('port', PORT)
   const server = http.createServer(app)
   const io = new ServerIO(server)
 
@@ -109,7 +110,6 @@ export function setUpWebsocket(): void {
     })
   })
 
-  const PORT = 3000
   server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`, getWiFiIPAddress())
     console.log(server.address())
