@@ -10,10 +10,7 @@ export function WifiIpAddress(): JSX.Element {
       return
     }
     if (!ip) {
-      console.log((window.api as PreloadAPITypes).getWiFiIPAddress());
-      
-      (window.api as PreloadAPITypes).getWiFiIPAddress().then((res) => {
-        console.log(res);
+      window.api.getWiFiIPAddress().then((res) => {
         setIp(res)
       })
       setTimeout(() => {
