@@ -6,7 +6,7 @@ import logger from 'morgan'
 import os from 'os'
 import { Server as ServerIO } from 'socket.io'
 import applescript from 'applescript'
-import { AppleScript, MoveMouseParams } from '../types'
+import { AppleScript, DeviceInfo, MoveMouseParams } from '../types'
 import { threeFingerSwitchWindow } from './applescripts'
 import {
   dragMouse,
@@ -16,6 +16,7 @@ import {
   moveMouse,
   scrollMouse
 } from '@hurdlegroup/robotjs'
+import { ipcMain } from 'electron'
 const appleScript: AppleScript = applescript
 
 export const getWiFiIPAddress = (): string => {
@@ -42,69 +43,81 @@ export function setUpWebsocket(): void {
   app.use(cookieParser())
   app.use(cors())
 
-  // app.use(
-  //   '/index',
-  //   express.Router().get('/', (req, res) => {
-  //     res.send('respond with a resource')
-  //   })
-  // )
+  app.use(
+    '/index',
+    express.Router().get('/', (req, res) => {
+      res.send('respond with a resource')
+    })
+  )
   const PORT = 3000
   app.set('port', PORT)
   const server = http.createServer(app)
   const io = new ServerIO(server)
+  let deviceInfo: DeviceInfo
+
+  ipcMain.handle('getDeviceInfo', () => {
+    console.log('ipcMaingetDeviceInfo', deviceInfo || null)
+
+    return deviceInfo || null
+  })
 
   io.on('connection', (socket) => {
     console.log('A client connected', getWiFiIPAddress())
 
-    // 监听来自客户端的消息
-    socket.on('messageFromClient', (data) => {
-      console.log('Message from client:', data)
+    ipcMain.on('confirm-connect-device', (_, isConnect: boolean) => {
+      if (isConnect) {
+        socket.on('threeFingerSwitchWindow', (data) => {
+          console.log('threeFingerSwitchWindow', data)
 
-      // 向客户端发送消息
-      io.emit('messageFromServer', 'Hello from server')
-    })
+          appleScript.execString(threeFingerSwitchWindow(data), (err, rtn) => {
+            if (err) {
+              appleScript.execString(`display dialog "err: ${err}"`)
+            }
+          })
+        })
 
-    socket.on('threeFingerSwitchWindow', (data) => {
-      console.log('threeFingerSwitchWindow', data)
+        socket.on('moveMouse', ({ left, top, isDraging }: MoveMouseParams) => {
+          const mousePosition = getMousePos()
+          isDraging
+            ? dragMouse(mousePosition.x + left, mousePosition.y + top)
+            : moveMouse(mousePosition.x + left, mousePosition.y + top)
+        })
 
-      appleScript.execString(threeFingerSwitchWindow(data), (err, rtn) => {
-        if (err) {
-          appleScript.execString(`display dialog "err: ${err}"`)
-        }
-      })
-    })
+        socket.on(
+          'mouseToggle',
+          ({ down, button }: { down?: 'down' | 'up'; button?: 'left' | 'right' | 'middle' }) => {
+            mouseToggle(down || 'down', button || 'left')
+          }
+        )
 
-    socket.on('moveMouse', ({ left, top, isDraging }: MoveMouseParams) => {
-      const mousePosition = getMousePos()
-      isDraging
-        ? dragMouse(mousePosition.x + left, mousePosition.y + top)
-        : moveMouse(mousePosition.x + left, mousePosition.y + top)
-    })
+        socket.on(
+          'mouseClick',
+          ({
+            button = 'left',
+            double = false
+          }: {
+            button?: 'left' | 'right' | 'middle'
+            double?: boolean
+          }) => {
+            mouseClick(button, double)
+          }
+        )
 
-    socket.on(
-      'mouseToggle',
-      ({ down, button }: { down?: 'down' | 'up'; button?: 'left' | 'right' | 'middle' }) => {
-        mouseToggle(down || 'down', button || 'left')
+        socket.on('scrollMouse', ({ x, y }: { x: number; y: number }) => {
+          scrollMouse(x, y)
+        })
+      } else {
+        socket.disconnect()
       }
-    )
-
-    socket.on(
-      'mouseClick',
-      ({
-        button = 'left',
-        double = false
-      }: {
-        button?: 'left' | 'right' | 'middle'
-        double?: boolean
-      }) => {
-        mouseClick(button, double)
-      }
-    )
-
-    socket.on('scrollMouse', ({ x, y }: { x: number; y: number }) => {
-      scrollMouse(x, y)
     })
 
+    // ========================== deviceInfo ===========================
+    socket.on('deviceInfo', (res: DeviceInfo) => {
+      console.log('deviceInfo', res)
+
+      deviceInfo = res
+    })
+    // ========================== disconnect ===========================
     socket.on('disconnect', () => {
       console.log('Client disconnected')
     })

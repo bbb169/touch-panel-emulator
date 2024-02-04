@@ -40,6 +40,7 @@ export interface PreloadAPITypes {
   mouseClick: ({ button, double }: MouseClickParams) => void
   keyTap: ({ key, modified }: KeyTapParams) => void
   zoomInOrOut: (isIn?: boolean) => void
+  confirmConnectDevice(isConnect: boolean): void
   getWiFiIPAddress(): Promise<string>
   getDeviceInfo(): Promise<DeviceInfo>
 }

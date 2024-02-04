@@ -24,8 +24,14 @@ const api: PreloadAPITypes = {
   zoomInOrOut(isIn) {
     ipcRenderer.send('zoom-change-from-renderer', isIn)
   },
+  confirmConnectDevice(isConnect) {
+    ipcRenderer.send('confirm-connect-device', isConnect)
+  },
   async getWiFiIPAddress() {
     return await ipcRenderer.invoke('getWiFiIPAddress')
+  },
+  async getDeviceInfo() {
+    return await ipcRenderer.invoke('getDeviceInfo')
   }
 }
 
