@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    api: PreloadAPITypes // 这里定义 api 属性的类型为一个接受无参数并返回 void 的函数
+  }
+}
+
 export interface MoveMouseParams {
   left: number
   top: number
@@ -21,6 +27,13 @@ export interface KeyTapParams {
   modified?: string[]
 }
 
+
+export interface DeviceInfo {
+  deviceName: string
+  ipAddress: string
+}
+
+
 export interface PreloadAPITypes {
   moveMouseSmooth: (left: number, top: number) => void
   scrollMouse: ({ right, top }: ScrollMouseParams) => void
@@ -28,6 +41,7 @@ export interface PreloadAPITypes {
   keyTap: ({ key, modified }: KeyTapParams) => void
   zoomInOrOut: (isIn?: boolean) => void
   getWiFiIPAddress(): Promise<string>
+  getDeviceInfo(): Promise<DeviceInfo>
 }
 
 export interface AppleScript {
