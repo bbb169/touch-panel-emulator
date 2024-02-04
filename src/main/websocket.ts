@@ -56,8 +56,6 @@ export function setUpWebsocket(): void {
   let deviceInfo: DeviceInfo
 
   ipcMain.handle('getDeviceInfo', () => {
-    console.log('ipcMaingetDeviceInfo', deviceInfo || null)
-
     return deviceInfo || null
   })
 
