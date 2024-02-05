@@ -1,7 +1,8 @@
 import { getData, storeData } from '@renderer/utils/storage'
-import { Modal } from 'antd'
+import { Modal, Result, Tooltip } from 'antd'
 import { useEffect, useState } from 'react'
 import { DeviceInfo } from 'src/types'
+import { WifiIpAddress } from '../wifiIpAddress'
 
 export function DeviceInfoComp(): JSX.Element {
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>()
@@ -54,11 +55,34 @@ export function DeviceInfoComp(): JSX.Element {
       {deviceInfo ? (
         <div>
           设备信息为：
-          <div>设备名：{deviceInfo.deviceName}</div>
-          <div>Ip地址为：{deviceInfo.ipAddress}</div>
+          <div>设备名：{deviceInfo?.deviceName}</div>
+          <div>Ip地址为：{deviceInfo?.ipAddress}</div>
+          <Result status="success" />
+          <Tooltip
+            title={
+              <div
+                style={{
+                  textAlign: 'center',
+                  fontSize: 12,
+                  maxHeight: 100,
+                  maxWidth: 200,
+                  overflow: 'auto'
+                }}
+              >
+                请在系统设置的辅助功能中允许touch-panel-emulator控制您的电脑，同时还需要您允许osascript控制您的电脑，打开辅助功能系统设置后，步骤如下：
+                点击‘+’号，cmd+shift+G,输入/usr/bin/osascript,点击osascript即可添加
+              </div>
+            }
+          >
+            无法控制电脑？
+          </Tooltip>
         </div>
       ) : (
-        <div>暂无设备连接</div>
+        <div style={{ textAlign: 'center' }}>
+          暂无设备连接
+          <Result status="warning" />
+          <WifiIpAddress />
+        </div>
       )}
     </>
   )
