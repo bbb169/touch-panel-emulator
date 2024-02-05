@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { PreloadAPITypes } from 'src/types'
 
 export function WifiIpAddress(): JSX.Element {
   const [times, setTimes] = useState(0)
@@ -19,5 +18,5 @@ export function WifiIpAddress(): JSX.Element {
     }
   }, [times])
 
-  return <div>ip地址： {ip}</div>
+  return <div style={{ fontSize: 10 }}>手机输入ip连接： {ip}</div>
 }
