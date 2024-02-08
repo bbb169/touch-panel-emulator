@@ -58,10 +58,10 @@ export function DeviceInfoComp(): JSX.Element {
     <>
       {confimModal}
       {deviceInfo ? (
-        <div style={{ fontSize: 12 }}>
-          设备信息为：
-          <div>设备名：{deviceInfo?.deviceName}</div>
-          <div>Ip地址为：{deviceInfo?.ipAddress}</div>
+        <div style={{ fontSize: 12, textAlign: 'center' }}>
+          已连接！
+          <div>设备名：{deviceInfo?.deviceName || '未知'}</div>
+          <div>Ip地址为：{deviceInfo?.ipAddress || '未知'}</div>
           <Result status="success" />
           <Tooltip
             title={
@@ -69,7 +69,6 @@ export function DeviceInfoComp(): JSX.Element {
                 style={{
                   textAlign: 'center',
                   fontSize: 12,
-                  maxHeight: 100,
                   maxWidth: 200,
                   overflow: 'auto'
                 }}
@@ -79,7 +78,16 @@ export function DeviceInfoComp(): JSX.Element {
               </div>
             }
           >
-            无法控制电脑？
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 20,
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }}
+            >
+              无法控制电脑？
+            </div>
           </Tooltip>
         </div>
       ) : (
