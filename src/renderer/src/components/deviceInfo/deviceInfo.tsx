@@ -6,11 +6,11 @@ import { WifiIpAddress } from '../wifiIpAddress'
 
 export function DeviceInfoComp(): JSX.Element {
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>()
+  const [confimModal, setConfimModal] = useState<JSX.Element>(<></>)
 
   useEffect(() => {
     function getDeviceInfo(): void {
       window.api.getDeviceInfo().then((res) => {
-        console.log('getDeviceInfo', res)
         const currentIpAddress = getData('ipAddress') || []
         if (res && currentIpAddress?.includes(res.ipAddress)) {
           window.api.confirmConnectDevice(true)
@@ -19,26 +19,30 @@ export function DeviceInfoComp(): JSX.Element {
         }
 
         if (res) {
-          Modal.confirm({
-            content: (
+          setConfimModal(
+            <Modal
+              open={true}
+              okText="好的你来吧"
+              cancelText="陌生人的设备我不连"
+              onOk={() => {
+                window.api.confirmConnectDevice(true)
+                setDeviceInfo(res)
+                storeData('ipAddress', [...currentIpAddress, res.ipAddress])
+                setConfimModal(<></>)
+              }}
+              onCancel={() => {
+                getDeviceInfo()
+                window.api.confirmConnectDevice(false)
+                setConfimModal(<></>)
+              }}
+            >
               <div>
                 <div>设备名：{res.deviceName}</div>
                 <div>Ip地址为：{res.ipAddress}</div>
                 的设备想与您连接 是否同意？
               </div>
-            ),
-            okText: '好的你来吧',
-            cancelText: '陌生人的设备我不连',
-            onOk: () => {
-              window.api.confirmConnectDevice(true)
-              setDeviceInfo(res)
-              storeData('ipAddress', [...currentIpAddress, res.ipAddress])
-            },
-            onCancel() {
-              getDeviceInfo()
-              window.api.confirmConnectDevice(false)
-            }
-          })
+            </Modal>
+          )
         } else {
           setTimeout(() => {
             getDeviceInfo()
@@ -52,8 +56,9 @@ export function DeviceInfoComp(): JSX.Element {
 
   return (
     <>
+      {confimModal}
       {deviceInfo ? (
-        <div>
+        <div style={{ fontSize: 12 }}>
           设备信息为：
           <div>设备名：{deviceInfo?.deviceName}</div>
           <div>Ip地址为：{deviceInfo?.ipAddress}</div>
