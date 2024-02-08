@@ -104,6 +104,8 @@ export function setUpWebsocket(): void {
         socket.on('scrollMouse', ({ x, y }: { x: number; y: number }) => {
           scrollMouse(x, y)
         })
+
+        socket.emit('confirm-connect-device')
       } else {
         socket.disconnect()
       }
