@@ -5,13 +5,22 @@ import { DeviceInfo } from 'src/types'
 import { WifiIpAddress } from '../wifiIpAddress'
 
 export function DeviceInfoComp(): JSX.Element {
-  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>()
+  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo | null>()
   const [confimModal, setConfimModal] = useState<JSX.Element>(<></>)
 
   useEffect(() => {
     function getDeviceInfo(): void {
       window.api.getDeviceInfo().then((res) => {
         const currentIpAddress = getData('ipAddress') || []
+        if (deviceInfo?.ipAddress === res.ipAddress) {
+          return
+        }
+
+        if (deviceInfo?.ipAddress && !res) {
+          setDeviceInfo(null);
+          return
+        }
+
         if (res && currentIpAddress?.includes(res.ipAddress)) {
           window.api.confirmConnectDevice(true)
           setDeviceInfo(res)
@@ -43,15 +52,11 @@ export function DeviceInfoComp(): JSX.Element {
               </div>
             </Modal>
           )
-        } else {
-          setTimeout(() => {
-            getDeviceInfo()
-          }, 5000)
         }
       })
     }
 
-    getDeviceInfo()
+    setInterval(() => getDeviceInfo(), 5000)
   }, [])
 
   return (
