@@ -94,6 +94,7 @@ export function DeviceInfoComp(): JSX.Element {
         <div style={{ textAlign: 'center' }}>
           暂无设备连接
           <Result status="warning" />
+          <div style={{ fontSize: 10 }}>请保持手机和电脑在同一WiFi连接下</div>
           <WifiIpAddress />
         </div>
       )}
