@@ -53,7 +53,7 @@ export function setUpWebsocket(): void {
   app.set('port', PORT)
   const server = http.createServer(app)
   const io = new ServerIO(server)
-  let deviceInfo: DeviceInfo
+  let deviceInfo: DeviceInfo | null
 
   ipcMain.handle('getDeviceInfo', () => {
     return deviceInfo || null
@@ -120,6 +120,7 @@ export function setUpWebsocket(): void {
     // ========================== disconnect ===========================
     socket.on('disconnect', () => {
       console.log('Client disconnected')
+      deviceInfo = null;
     })
   })
 
