@@ -61,7 +61,7 @@ export function setUpWebsocket(): void {
 
   io.on('connection', (socket) => {
     console.log('A client connected', getWiFiIPAddress())
-
+    socket.removeAllListeners()
     ipcMain.on('confirm-connect-device', (_, isConnect: boolean) => {
       if (isConnect) {
         socket.on('threeFingerSwitchWindow', (data) => {
@@ -120,7 +120,7 @@ export function setUpWebsocket(): void {
     // ========================== disconnect ===========================
     socket.on('disconnect', () => {
       console.log('Client disconnected')
-      deviceInfo = null;
+      deviceInfo = null
     })
   })
 
