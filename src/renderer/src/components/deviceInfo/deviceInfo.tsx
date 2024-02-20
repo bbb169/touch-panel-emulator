@@ -22,7 +22,9 @@ export function DeviceInfoComp(): JSX.Element {
         }
 
         if (res && currentIpAddress?.includes(res.ipAddress)) {
-          window.api.confirmConnectDevice(true)
+          if (!deviceInfo) {
+            window.api.confirmConnectDevice(true)
+          }
           setDeviceInfo(res)
           return
         }
@@ -56,8 +58,12 @@ export function DeviceInfoComp(): JSX.Element {
       })
     }
 
-    setInterval(() => getDeviceInfo(), 5000)
-  }, [])
+    const interval = setInterval(() => getDeviceInfo(), 5000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [deviceInfo])
 
   return (
     <>
