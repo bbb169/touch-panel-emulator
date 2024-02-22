@@ -1,8 +1,8 @@
-import { app, shell, BrowserWindow, screen, ipcMain, ipcRenderer } from 'electron'
+import { app, shell, BrowserWindow, screen, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { keyTap, mouseClick, moveMouse, scrollMouse } from '@hurdlegroup/robotjs'
+import { keyTap, keys, mouseClick, moveMouse, scrollMouse } from '@hurdlegroup/robotjs'
 import {
   AppleScript,
   KeyTapParams,
@@ -79,7 +79,7 @@ app.whenReady().then(() => {
   // ================= communication between main and renderer =============
   ipcMain.on('move-mouse-from-renderer', (_, { left, top }: MoveMouseParams) => {
     const mousePosition = screen.getCursorScreenPoint()
-    appleScript.execString(threeFingerSwitchWindow(left > 0 ? 'right' : 'top'), (err, rtn) => {
+    appleScript.execString(threeFingerSwitchWindow(left > 0 ? 'right' : 'top'), (err) => {
       if (err) {
         appleScript.execString(`display dialog "err: ${err}"`)
       }
@@ -98,7 +98,7 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('mouse-click-from-renderer', (_, { key, modified }: KeyTapParams) => {
-    keyTap(key, modified)
+    keyTap(key as keys, modified)
   })
 
   ipcMain.on('zoom-change-from-renderer', (_, isIn: boolean | undefined) => {

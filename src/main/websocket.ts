@@ -45,7 +45,7 @@ export function setUpWebsocket(): void {
 
   app.use(
     '/index',
-    express.Router().get('/', (req, res) => {
+    express.Router().get('/', (_, res) => {
       res.send('respond with a resource')
     })
   )
@@ -67,7 +67,7 @@ export function setUpWebsocket(): void {
         socket.on('threeFingerSwitchWindow', (data) => {
           console.log('threeFingerSwitchWindow', data)
 
-          appleScript.execString(threeFingerSwitchWindow(data), (err, rtn) => {
+          appleScript.execString(threeFingerSwitchWindow(data), (err) => {
             if (err) {
               appleScript.execString(`display dialog "err: ${err}"`)
             }

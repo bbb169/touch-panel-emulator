@@ -8,7 +8,7 @@ console.log('getWiFiIPAddress',ipcRenderer.invoke('getWiFiIPAddress'));
 // Custom APIs for renderer
 const api: PreloadAPITypes = {
   moveMouseSmooth: (left: number, top: number): void => {
-    const data: MoveMouseParams = { left, top }
+    const data: MoveMouseParams = { left, top, isDraging: false }
     ipcRenderer.send('move-mouse-from-renderer', data)
   },
   scrollMouse: ({ right, top }: ScrollMouseParams): void => {
