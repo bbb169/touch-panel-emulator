@@ -41,6 +41,7 @@ export interface PreloadAPITypes {
   keyTap: ({ key, modified }: KeyTapParams) => void
   zoomInOrOut: (isIn?: boolean) => void
   confirmConnectDevice(isConnect: boolean): void
+  disConnectDevice(): void
   getWiFiIPAddress(): Promise<string>
   getDeviceInfo(): Promise<DeviceInfo>
 }

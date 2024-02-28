@@ -27,6 +27,9 @@ const api: PreloadAPITypes = {
   confirmConnectDevice(isConnect) {
     ipcRenderer.send('confirm-connect-device', isConnect)
   },
+  disConnectDevice() {
+    ipcRenderer.send('dis-connect-device')
+  },
   async getWiFiIPAddress() {
     return await ipcRenderer.invoke('getWiFiIPAddress')
   },
