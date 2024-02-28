@@ -1,8 +1,9 @@
 import { getData, storeData } from '@renderer/utils/storage'
-import { Modal, Result, Tooltip } from 'antd'
+import { Button, Modal, Result, Tooltip } from 'antd'
 import { useEffect, useState } from 'react'
 import { DeviceInfo } from 'src/types'
 import { WifiIpAddress } from '../wifiIpAddress'
+import { ApiOutlined } from '@ant-design/icons'
 
 export function DeviceInfoComp(): JSX.Element {
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfo | null>()
@@ -12,16 +13,24 @@ export function DeviceInfoComp(): JSX.Element {
     function getDeviceInfo(): void {
       window.api.getDeviceInfo().then((res) => {
         const currentIpAddress = getData('ipAddress') || []
-        if (deviceInfo?.ipAddress === res.ipAddress) {
+        const noAutoConnectAddress = sessionStorage.getItem('noAutoConnect')
+
+        if (deviceInfo?.ipAddress === res?.ipAddress) {
           return
         }
 
         if (deviceInfo?.ipAddress && !res) {
-          setDeviceInfo(null);
+          setDeviceInfo(null)
           return
         }
 
-        if (res && currentIpAddress?.includes(res.ipAddress)) {
+        if (
+          res &&
+          currentIpAddress?.includes(res.ipAddress) &&
+          noAutoConnectAddress !== res.ipAddress
+        ) {
+          console.log(noAutoConnectAddress, res.ipAddress);
+          
           if (!deviceInfo) {
             window.api.confirmConnectDevice(true)
           }
@@ -74,6 +83,21 @@ export function DeviceInfoComp(): JSX.Element {
           <div>设备名：{deviceInfo?.deviceName || '未知'}</div>
           <div>Ip地址为：{deviceInfo?.ipAddress || '未知'}</div>
           <Result status="success" />
+          <Tooltip title="断开连接">
+            <Button
+              type="primary"
+              danger
+              style={{ width: 80, height: 80, lineHeight: '80px' }}
+              shape="circle"
+              icon={<ApiOutlined style={{ fontSize: 38 }} rotate={45} />}
+              size="large"
+              onClick={() => {
+                window.api.disConnectDevice()
+                sessionStorage.setItem('noAutoConnect', deviceInfo?.ipAddress || '')
+                setDeviceInfo(null);
+              }}
+            />
+          </Tooltip>
           <Tooltip
             title={
               <div
