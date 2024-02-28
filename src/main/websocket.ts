@@ -118,6 +118,10 @@ export function setUpWebsocket(): void {
       deviceInfo = res
     })
     // ========================== disconnect ===========================
+    ipcMain.on('dis-connect-device', () => {
+      socket.disconnect();
+      deviceInfo = null
+    })
     socket.on('disconnect', () => {
       console.log('Client disconnected')
       deviceInfo = null
