@@ -69,7 +69,7 @@ export function DeviceInfoComp(): JSX.Element {
     <>
       {confimModal}
       {deviceInfo ? (
-        <div style={{ fontSize: 12, textAlign: 'center' }}>
+        <div style={{ fontSize: 20, textAlign: 'center' }}>
           已连接！
           <div>设备名：{deviceInfo?.deviceName || '未知'}</div>
           <div>Ip地址为：{deviceInfo?.ipAddress || '未知'}</div>
@@ -79,7 +79,7 @@ export function DeviceInfoComp(): JSX.Element {
               <div
                 style={{
                   textAlign: 'center',
-                  fontSize: 12,
+                  fontSize: 20,
                   maxWidth: 200,
                   overflow: 'auto'
                 }}
@@ -102,10 +102,10 @@ export function DeviceInfoComp(): JSX.Element {
           </Tooltip>
         </div>
       ) : (
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center', fontSize: 20 }}>
           暂无设备连接
           <Result status="warning" />
-          <div style={{ fontSize: 10 }}>请保持手机和电脑在同一WiFi连接下</div>
+          <div style={{ fontSize: 16 }}>请保持手机和电脑在同一WiFi连接下</div>
           <WifiIpAddress />
         </div>
       )}

@@ -18,5 +18,5 @@ export function WifiIpAddress(): JSX.Element {
     }
   }, [times])
 
-  return <div style={{ fontSize: 10 }}>手机输入ip连接： {ip}</div>
+  return <div style={{ fontSize: 16 }}>手机输入ip连接： {ip}</div>
 }
