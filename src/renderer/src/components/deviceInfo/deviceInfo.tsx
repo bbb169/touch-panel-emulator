@@ -29,12 +29,10 @@ export function DeviceInfoComp(): JSX.Element {
           currentIpAddress?.includes(res.ipAddress) &&
           noAutoConnectAddress !== res.ipAddress
         ) {
-          console.log(noAutoConnectAddress, res.ipAddress);
-          
           if (!deviceInfo) {
             window.api.confirmConnectDevice(true)
+            setDeviceInfo(res)
           }
-          setDeviceInfo(res)
           return
         }
 
