@@ -108,6 +108,7 @@ export function setUpWebsocket(): void {
         socket.emit('confirm-connect-device')
       } else {
         socket.disconnect()
+        socket.emit('dis-connect-device')
       }
     })
 
