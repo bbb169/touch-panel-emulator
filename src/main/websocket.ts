@@ -120,7 +120,7 @@ export function setUpWebsocket(): void {
     })
     // ========================== disconnect ===========================
     ipcMain.on('dis-connect-device', () => {
-      socket.disconnect();
+      socket.disconnect()
       deviceInfo = null
     })
     socket.on('disconnect', () => {
