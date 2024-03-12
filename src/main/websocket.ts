@@ -17,6 +17,7 @@ import {
   scrollMouse
 } from '@hurdlegroup/robotjs'
 import { ipcMain } from 'electron'
+import { platform } from '.'
 const appleScript: AppleScript = applescript
 
 export const getWiFiIPAddress = (): string => {
@@ -66,6 +67,9 @@ export function setUpWebsocket(): void {
       if (isConnect) {
         socket.on('threeFingerSwitchWindow', (data) => {
           console.log('threeFingerSwitchWindow', data)
+          if (platform !== 'darwin') {
+            return
+          }
 
           appleScript.execString(threeFingerSwitchWindow(data), (err) => {
             if (err) {
