@@ -15,7 +15,7 @@ import applescript from 'applescript'
 import { getWiFiIPAddress, setUpWebsocket } from './websocket'
 const appleScript: AppleScript = applescript
 
-export let platform: NodeJS.Platform;
+export let platform: NodeJS.Platform
 
 function createWindow(): void {
   // Create the browser window.
@@ -65,12 +65,10 @@ app.whenReady().then(() => {
 
   createWindow()
 
-
   // ======================== get operation system =====================
-  console.log(process.platform);
-  
-  platform = process.platform;
+  console.log(process.platform)
 
+  platform = process.platform
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
